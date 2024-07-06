@@ -32,29 +32,30 @@ try:
 except Exception as e:
     print(f"Error interacting with the search box: {e}")
 
-pharmacy_links = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@data-test-id, 'venueCard')]")))
+def open_tabs_and_perform_function(driver: webdriver.chrome.webdriver.WebDriver, max_links=5, function=None) -> None:
+    wait = WebDriverWait(driver, 10)
+    pharmacy_links = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@data-test-id, 'venueCard')]")))
 
-    # Ensure we have at least 5 links, or take only the available ones if fewer
-num_links = min(len(pharmacy_links), 5)
+        # Ensure we have at least 5 links, or take only the available ones if fewer
+    num_links = min(len(pharmacy_links), max_links)
 
-for i in range(num_links):
-    # Open each link in a new tab
-    link = pharmacy_links[i].get_attribute('href')
-    driver.execute_script("window.open(arguments[0], '_blank');", link)
+    for i in range(num_links):
+        # Open each link in a new tab
+        link = pharmacy_links[i].get_attribute('href')
+        driver.execute_script("window.open(arguments[0], '_blank');", link)
 
-# Switch to each tab and perform actions if needed
-for i in range(num_links):
-    driver.switch_to.window(driver.window_handles[i + 1])  # Switch to the newly opened tab
-    # Add any actions you want to perform on the new page here
-    print(f"Opened tab {i+1}: {driver.current_url}")
+    # Switch to each tab and perform actions if needed
+    for i in range(num_links):
+        driver.switch_to.window(driver.window_handles[i + 1])  # Switch to the newly opened tab
+        # Add any actions you want to perform on the new page here
+        print(f"Opened tab {i+1}: {driver.current_url}")
 
-# Optionally, close all tabs except the first one
-for i in range(num_links):
-    driver.switch_to.window(driver.window_handles[1])  # Switch to the tab to be closed
-    driver.close()
+    # Optionally, close all tabs except the first one
+    for i in range(num_links):
+        driver.switch_to.window(driver.window_handles[1])  # Switch to the tab to be closed
+        driver.close()
 
-
-
+open_tabs_and_perform_function(driver)
 
 
 # Keep the browser open
