@@ -5,10 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from typing import List, Set
+from typing import List, Set, Counter
 import csv
 from datetime import datetime
 import time
+from collections import Counter
 
 class WoltPharmacyExtractor:
 
@@ -19,7 +20,7 @@ class WoltPharmacyExtractor:
         """
         self.start()
         self.items = []
-        self.categories: Set[str] = set()
+        self.categories: Counter[str] = Counter()
 
     def start(self):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -85,9 +86,9 @@ class WoltPharmacyExtractor:
         index = 0 # category index
         category = str()
         for link in links:
-            self.categories.add(link.text)
+            self.categories.update([link.text.strip()])
             if any(text in link.text for text in text_to_match):
-                category = link.text
+                category = link.text.strip()
                 href = link.get_attribute('href')
                 if href:
                     self.driver.execute_script("window.open(arguments[0], '_blank');", href)
@@ -143,20 +144,20 @@ class WoltPharmacyExtractor:
             
             print(f"Items saved to {filename}")
     
-    def _print_categories(self, elements: Set[str]) -> None:
-        print('Distinct Categories')
-        for element in self.categories:
-            print(element)
+    def _print_categories(self) -> None:
+        print('Distinct Categories, Occurences')
+        for category, occurences in self.categories.items():
+            print(f'{category}, {occurences}')
 
     def _categories_to_file(self) -> None:
         # Generate a timestamp for the filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"categories_{timestamp}.txt"
+        filename = f"categories_{timestamp}.csv"
         
         # Write elements to the file
         with open(filename, 'w', encoding='utf-8') as file:
-            for element in self.categories:
-                file.write(f"{element}\n")
+            for category, occurences in self.categories.items():
+                file.write(f"{category}, {occurences}\n")
         
         print(f"Elements written to {filename}")
 
@@ -180,4 +181,4 @@ class WoltPharmacyExtractor:
     
 if __name__ == "__main__":
     wpe = WoltPharmacyExtractor()
-    wpe.extract_items(max_links=5)
+    wpe.extract_items(max_links=2, save_to_file=True)
