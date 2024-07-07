@@ -1,0 +1,3 @@
+include a column category in the generated csv
+optimize waiting times
+generate list with all categories and their elements
