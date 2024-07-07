@@ -84,7 +84,7 @@ class WoltPharmacyExtractor:
         category = str()
         for link in links:
             self.categories.update([link.text.strip()])
-            if any(text in link.text for text in text_to_match):
+            if True:  # if any(text in link.text for text in text_to_match):
                 category = link.text.strip()
                 href = link.get_attribute('href')
                 if href:
@@ -176,4 +176,4 @@ class WoltPharmacyExtractor:
     
 if __name__ == "__main__":
     wpe = WoltPharmacyExtractor()
-    wpe.extract_items(max_links=10, save_to_file=True)
+    wpe.extract_items(max_links=None, save_to_file=True)
