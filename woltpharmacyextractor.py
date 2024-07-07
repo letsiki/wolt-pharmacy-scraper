@@ -66,10 +66,8 @@ class WoltPharmacyExtractor:
             self.driver.execute_script("window.open(arguments[0], '_blank');", link)
             index += 1
             print(f"processing pharmacy {index}/{num_links}")
-            # time.sleep(2)
             self.driver.switch_to.window(self.driver.window_handles[-1])
             self._open_categories_in_tabs()
-            time.sleep(2)
             self.driver.close()
             self.driver.switch_to.window(self.driver.window_handles[0])
 
@@ -81,7 +79,6 @@ class WoltPharmacyExtractor:
 
         # Find all <a> elements with the data-test-id 'navigation-bar-link'
         links = self.driver.find_elements(By.CSS_SELECTOR, '[data-test-id="navigation-bar-link"]')
-        time.sleep(2)
         # Open each href in a new tab if any text snippet is contained in the link's text
         index = 0 # category index
         category = str()
@@ -94,10 +91,8 @@ class WoltPharmacyExtractor:
                     self.driver.execute_script("window.open(arguments[0], '_blank');", href)
                     index += 1
                     print(f"\tprocessing category {index}/{len(links)}")
-                    time.sleep(2)
                     self.driver.switch_to.window(self.driver.window_handles[-1])
                     self._extract_items_from_current_category(category)
-                    time.sleep(2)
                     self.driver.close()
                     self.driver.switch_to.window(self.driver.window_handles[-1])
 
@@ -181,4 +176,4 @@ class WoltPharmacyExtractor:
     
 if __name__ == "__main__":
     wpe = WoltPharmacyExtractor()
-    wpe.extract_items(max_links=2, save_to_file=True)
+    wpe.extract_items(max_links=10, save_to_file=True)
