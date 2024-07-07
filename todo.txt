@@ -1,2 +1,2 @@
 optimize waiting times
-generate list with all categories and their elements
+create a seperate function to only extract categories without opening them in a new page

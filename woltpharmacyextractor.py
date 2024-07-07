@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from typing import List
+from typing import List, Set
 import csv
 from datetime import datetime
 import time
@@ -19,6 +19,7 @@ class WoltPharmacyExtractor:
         """
         self.start()
         self.items = []
+        self.categories: Set[str] = set()
 
     def start(self):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -84,6 +85,7 @@ class WoltPharmacyExtractor:
         index = 0 # category index
         category = str()
         for link in links:
+            self.categories.add(link.text)
             if any(text in link.text for text in text_to_match):
                 category = link.text
                 href = link.get_attribute('href')
@@ -140,6 +142,23 @@ class WoltPharmacyExtractor:
                 writer.writerow(item)
             
             print(f"Items saved to {filename}")
+    
+    def _print_categories(self, elements: Set[str]) -> None:
+        print('Distinct Categories')
+        for element in self.categories:
+            print(element)
+
+    def _categories_to_file(self) -> None:
+        # Generate a timestamp for the filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"categories_{timestamp}.txt"
+        
+        # Write elements to the file
+        with open(filename, 'w', encoding='utf-8') as file:
+            for element in self.categories:
+                file.write(f"{element}\n")
+        
+        print(f"Elements written to {filename}")
 
     def extract_items(self, num_pharmacies: int=None, categories: List[str]=None, save_to_file=True, max_links=None) -> None:
         """
@@ -153,7 +172,9 @@ class WoltPharmacyExtractor:
         
         if save_to_file:
             self._save_items_to_csv()
+            self._categories_to_file()
         else:
+            self._print_categories()
             print(self)
         self.driver.close()
     

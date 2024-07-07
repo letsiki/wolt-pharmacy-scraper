@@ -4,3 +4,4 @@ __pycache__/
 wolt pharmacy scraper.code-workspace
 __pycache__\woltpharmacyextractor.cpython-312.pyc
 __pycache__\woltpharmacyextractor.cpython-312.pyc
+categories_*.txt
