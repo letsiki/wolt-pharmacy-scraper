@@ -74,16 +74,18 @@ class WoltPharmacyExtractor:
     def _open_categories_in_tabs(self, text_to_match=None) -> None:
         # List of texts to match
         if text_to_match is None:
-            # text_to_match = ["ΑΝΤΗΛΙΑΚΑ", "ΣΥΜΠΛ", "ΒΙΤΑΜΙΝΕΣ", "ΦΑΡΜΑΚ"]  # Populate this list with the desired texts
-            text_to_match = ["Frezyderm"]  # Populate this list with the desired texts
+            text_to_match = ["ΑΝΤΗΛΙΑΚΑ", "ΣΥΜΠΛ", "ΒΙΤΑΜΙΝΕΣ", "ΦΑΡΜΑΚ"]  # Populate this list with the desired texts
+            # text_to_match = ["Frezyderm"]  # Populate this list with the desired texts
 
         # Find all <a> elements with the data-test-id 'navigation-bar-link'
         links = self.driver.find_elements(By.CSS_SELECTOR, '[data-test-id="navigation-bar-link"]')
         time.sleep(2)
         # Open each href in a new tab if any text snippet is contained in the link's text
         index = 0 # category index
+        category = str()
         for link in links:
             if any(text in link.text for text in text_to_match):
+                category = link.text
                 href = link.get_attribute('href')
                 if href:
                     self.driver.execute_script("window.open(arguments[0], '_blank');", href)
@@ -91,12 +93,12 @@ class WoltPharmacyExtractor:
                     print(f"\tprocessing category {index}/{len(links)}")
                     time.sleep(2)
                     self.driver.switch_to.window(self.driver.window_handles[-1])
-                    self._extract_items_from_current_category()
+                    self._extract_items_from_current_category(category)
                     time.sleep(2)
                     self.driver.close()
                     self.driver.switch_to.window(self.driver.window_handles[-1])
 
-    def _extract_items_from_current_category(self) -> None:
+    def _extract_items_from_current_category(self, category: str) -> None:
         """
         Extracts item prices and names into a new dicitonary and updates 
         the items dictionary with it's pairs
@@ -114,7 +116,7 @@ class WoltPharmacyExtractor:
                 span_text = div.find_element(By.XPATH, './div[2]/div[1]/span').text.strip()
                 
                 # append the tuple to the list of items
-                self.items.append((h3_text, span_text))
+                self.items.append((h3_text, span_text, category))
                 # self.item_id += 1
                 
             except Exception as e:
@@ -132,7 +134,7 @@ class WoltPharmacyExtractor:
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             # Write the header
-            writer.writerow(['Description', 'Price String'])
+            writer.writerow(['Description', 'Price String', 'Category'])
             # Write the data from the list of tuples
             for item in self.items:
                 writer.writerow(item)
@@ -157,4 +159,4 @@ class WoltPharmacyExtractor:
     
 if __name__ == "__main__":
     wpe = WoltPharmacyExtractor()
-    wpe.extract_items(max_links=5)
+    wpe.extract_items(max_links=1)
