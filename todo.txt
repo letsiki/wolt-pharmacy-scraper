@@ -1,2 +1,3 @@
+add counting of category occurence
 optimize waiting times
 create a seperate function to only extract categories without opening them in a new page

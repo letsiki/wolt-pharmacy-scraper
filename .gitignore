@@ -1,2 +1,6 @@
-
-*.csv
+__pycache__/
+.vscode/
+*.log
+wolt pharmacy scraper.code-workspace
+categories_*.txt
+items_*.csv

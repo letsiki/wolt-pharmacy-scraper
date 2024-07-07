@@ -180,4 +180,4 @@ class WoltPharmacyExtractor:
     
 if __name__ == "__main__":
     wpe = WoltPharmacyExtractor()
-    wpe.extract_items(max_links=1)
+    wpe.extract_items(max_links=5)
