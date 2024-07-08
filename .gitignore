@@ -4,3 +4,5 @@ __pycache__/
 wolt pharmacy scraper.code-workspace
 items_*.csv
 categories_*.csv
+filtered_items_*.csv
+top_labels_*.csv
