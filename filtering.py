@@ -24,28 +24,18 @@ sorted_filtered_df_items['Price'] = sorted_filtered_df_items['Price String'].str
 sorted_filtered_df_items.drop('Price String', axis=1, inplace=True)
 
 
-# Create a timestamp
-timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-
-# Define the filename
-filename = f'filtered_items_{timestamp}.csv'
-
-# Save DataFrame to CSV
-# sorted_filtered_df_items.to_csv(filename, index=False)
-
-print(f'DataFrame saved to {filename}')
-
 def calculate_similarity(args):
     i, desc, description_column, threshold = args
-    indices_to_drop = []
+    similar_pairs = []
     for j in range(i + 1, len(description_column)):
         if levenshtein_ratio(desc, description_column[j]) >= threshold:
-            indices_to_drop.append(j)
-    return indices_to_drop
+            similar_pairs.append((i, j))
+    return similar_pairs
 
 def find_and_remove_similar(df, threshold=0.9):
     description_column = df['Description'].tolist()
-    indices_to_drop = []
+    indices_to_drop = set()
+    price_dict = {i: [df.at[i, 'Price']] for i in range(len(df))}
 
     # Create a pool of processes
     with Pool(processes=cpu_count()) as pool:
@@ -54,21 +44,40 @@ def find_and_remove_similar(df, threshold=0.9):
 
         # Collect the results
         for result in results:
-            indices_to_drop.extend(result)
+            for i, j in result:
+                if j not in indices_to_drop:
+                    price_dict[i].append(df.at[j, 'Price'])
+                    indices_to_drop.add(j)
+
+    # Create the new column with lists of prices
+    df['All Prices'] = [price_dict[i] for i in range(len(df))]
 
     # Drop duplicates
-    df = df.drop(indices_to_drop)
+    df = df.drop(list(indices_to_drop)).reset_index(drop=True)
+
+    return df
     
     # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('test.csv', index=False)
     
 print(sorted_filtered_df_items)
 
-# if __name__ == '__main__':
-#     freeze_support()  # Needed for Windows when creating frozen executables
-#     # Find and remove similar entries
-#     find_and_remove_similar(sorted_filtered_df_items)
-#     # find_and_remove_similar(df_items)
+if __name__ == '__main__':
+    freeze_support()  # Needed for Windows when creating frozen executables
+    # Find and remove similar entries
+    find_and_remove_similar(sorted_filtered_df_items)
+    # find_and_remove_similar(df_items)
+    sorted_filtered_df_items = sorted_filtered_df_items.reset_index(drop=True)
+    
+    # Create a timestamp
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
-#     print(sorted_filtered_df_items.reset_index(drop=True))
+    # Define the filename
+    filename = f'filtered_items_{timestamp}.csv'
 
-# # print(sorted_filtered_df_items.shape)
+
+    # Save DataFrame to CSV
+    sorted_filtered_df_items.to_csv(filename, index=False)
+
+    # print(sorted_filtered_df_items.reset_index(drop=True))
+
+# print(sorted_filtered_df_items.shape)
