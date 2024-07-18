@@ -18,6 +18,12 @@ filtered_df_items = df_items[df_items['Description'].apply(lambda desc: any(labe
 sorted_filtered_df_items = filtered_df_items.sort_values(by='Description').reset_index(drop=True)
 # print(sorted_filtered_df_items)
 
+# Convert the "Price String" column to a float with two decimal points
+sorted_filtered_df_items['Price'] = sorted_filtered_df_items['Price String'].str.replace(',', '.').str.replace(' €', '').astype(float).round(2)
+
+sorted_filtered_df_items.drop('Price String', axis=1, inplace=True)
+
+
 # Create a timestamp
 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
@@ -51,15 +57,18 @@ def find_and_remove_similar(df, threshold=0.9):
             indices_to_drop.extend(result)
 
     # Drop duplicates
-    print(df.drop(indices_to_drop).reset_index(drop=True))
+    df = df.drop(indices_to_drop)
     
+    # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('test.csv', index=False)
+    
+print(sorted_filtered_df_items)
 
+# if __name__ == '__main__':
+#     freeze_support()  # Needed for Windows when creating frozen executables
+#     # Find and remove similar entries
+#     find_and_remove_similar(sorted_filtered_df_items)
+#     # find_and_remove_similar(df_items)
 
-if __name__ == '__main__':
-    freeze_support()  # Needed for Windows when creating frozen executables
-    # Find and remove similar entries
-    find_and_remove_similar(sorted_filtered_df_items)
+#     print(sorted_filtered_df_items.reset_index(drop=True))
 
-    # print(sorted_filtered_df_items.reset_index(drop=True))
-
-# print(sorted_filtered_df_items.shape)
+# # print(sorted_filtered_df_items.shape)
