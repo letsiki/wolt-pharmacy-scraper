@@ -42,15 +42,14 @@ Notes:
 Any additional information that might be useful for understanding the module.
 """
 
-
 from datetime import datetime
 from multiprocessing import Pool, cpu_count, freeze_support
 import pandas as pd
 from Levenshtein import ratio as levenshtein_ratio
 
 # Load the CSV file into a DataFrame
-df_items = pd.read_csv('data/items_20240708_031709.csv')
-df_labels = pd.read_csv('data/top_labels_20240708231535.csv')
+df_items = pd.read_csv('data/output/items_20240708_031709.csv')
+df_labels = pd.read_csv('data/output/top_labels_20240708231535.csv')
 # print(df_labels)
 # Create a list of labels to check
 labels_to_check = df_labels['Label'].tolist()
@@ -102,7 +101,7 @@ def find_and_remove_similar(df, threshold=0.9):
 
     return df
     
-    # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('test.csv', index=False)
+    # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('data/output/test.csv', index=False)
     
 print(sorted_filtered_df_items)
 
@@ -117,7 +116,7 @@ if __name__ == '__main__':
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
     # Define the filename
-    filename = f'data/filtered_items_{timestamp}.csv'
+    filename = f'data/output/filtered_items_{timestamp}.csv'
 
 
     # Save DataFrame to CSV

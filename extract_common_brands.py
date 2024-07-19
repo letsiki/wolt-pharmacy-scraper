@@ -7,7 +7,7 @@ from datetime import datetime
 from data.input.excluded_words import EXCLUDED_WORDS
 
 # Load the CSV file into a DataFrame
-df = pd.read_csv('data/items_20240708_031709.csv')
+df = pd.read_csv('data/output/items_20240708_031709.csv')
 
 # Initialize a Counter dict
 word_counter = Counter()
@@ -101,7 +101,7 @@ def write_top_labels_to_csv(top_n):
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
     # Define the filename
-    filename = f'top_labels_{timestamp}.csv'
+    filename = f'data/output/top_labels_{timestamp}.csv'
 
     # Write to the CSV file
     with open(filename, mode='w', newline='') as file:
