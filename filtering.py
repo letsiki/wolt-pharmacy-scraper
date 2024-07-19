@@ -1,3 +1,48 @@
+"""
+filtering.py
+
+This module will perform some tranformation and filtering operations on a csv file
+that contains products extracted from Wolt.
+
+More specifically: 
+- it transforms the data by striping spaces from the Description column and also 
+transforms Price String to Price float. 
+- filters data based on another csv file that provides the brands of those 
+products. 
+- filters duplicates by using the Levenshtein ratio to determine duplicate entries
+ in the Description column and drops them after having stored the Price of each 
+ dropped row.
+
+Author: Alexandros Andriopoulos
+Date: 2024-07-19
+
+Dependencies:
+- datetime is used to add a timestamp to the generated files
+- multiprocessing module is used to speed up the Levenshtein Ratio
+algorithm speed   
+- Pandas is used to convert the csv into a Dataframe and then perform 
+all other operations on it.
+- Levenshtein contains the LR and is the faster version of the algorithm
+in Python 
+
+Inputs:
+- This module requires two csv files. One containg the items and another
+containing the brands that we are filtering
+
+Usage:
+Example of how to use the module or a brief description of key functions and classes.
+
+Example:
+    from module_name import some_function
+    
+    result = some_function(arguments)
+    print(result)
+
+Notes:
+Any additional information that might be useful for understanding the module.
+"""
+
+
 from datetime import datetime
 from multiprocessing import Pool, cpu_count, freeze_support
 import pandas as pd
