@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import re
 import csv
 from datetime import datetime
-from excluded_words import EXCLUDED_WORDS
+from data.input.excluded_words import EXCLUDED_WORDS
 
 # Load the CSV file into a DataFrame
-df = pd.read_csv('items_20240708_031709.csv')
+df = pd.read_csv('data/items_20240708_031709.csv')
 
 # Initialize a Counter dict
 word_counter = Counter()

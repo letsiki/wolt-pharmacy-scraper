@@ -126,7 +126,7 @@ class WoltPharmacyExtractor:
     def _save_items_to_csv(self):
         # Generate a timestamp for the filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"items_{timestamp}.csv"
+        filename = f"date/items_{timestamp}.csv"
         
         # Open a new CSV file and write the items with UTF-8 encoding
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:

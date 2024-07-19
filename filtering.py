@@ -4,8 +4,8 @@ import pandas as pd
 from Levenshtein import ratio as levenshtein_ratio
 
 # Load the CSV file into a DataFrame
-df_items = pd.read_csv('items_20240708_031709.csv')
-df_labels = pd.read_csv('top_labels_20240708231535.csv')
+df_items = pd.read_csv('data/items_20240708_031709.csv')
+df_labels = pd.read_csv('data/top_labels_20240708231535.csv')
 # print(df_labels)
 # Create a list of labels to check
 labels_to_check = df_labels['Label'].tolist()
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
     # Define the filename
-    filename = f'filtered_items_{timestamp}.csv'
+    filename = f'data/filtered_items_{timestamp}.csv'
 
 
     # Save DataFrame to CSV
