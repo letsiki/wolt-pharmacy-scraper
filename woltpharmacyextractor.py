@@ -10,9 +10,11 @@ import csv
 from datetime import datetime
 import time
 from collections import Counter
+import platform 
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
 
 class WoltPharmacyExtractor:
-
     def __init__(self) -> None:
         """
         Initializes the extractor and creates an instance of the driver
@@ -23,7 +25,11 @@ class WoltPharmacyExtractor:
         self.categories: Counter[str] = Counter()
 
     def start(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        if platform.system() == 'Windows':
+            self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        else:
+            self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+
 
     def quit(self):
         self.driver.quit()
@@ -126,7 +132,7 @@ class WoltPharmacyExtractor:
     def _save_items_to_csv(self):
         # Generate a timestamp for the filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"date/output/items_{timestamp}.csv"
+        filename = f"data/output/items_{timestamp}.csv"
         
         # Open a new CSV file and write the items with UTF-8 encoding
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
