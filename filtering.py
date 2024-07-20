@@ -26,6 +26,7 @@ all other operations on it.
 in Python 
 - platform to check the name of the OS, in order to handle 
 multiprocessing support
+- numpy to calculate the median of the list of prices
 
 Inputs:
 - This module requires two csv files. One containg the items and another
@@ -41,7 +42,7 @@ Example:
     print(result)
 
 Notes:
-Any additional information that might be useful for understanding the module.
+Any additional information that might be useful f or understanding the module.
 """
 
 from datetime import datetime
@@ -49,6 +50,7 @@ from multiprocessing import Pool, cpu_count, freeze_support
 import pandas as pd
 from Levenshtein import ratio as levenshtein_ratio
 import platform
+import numpy as np
 
 # Load the CSV file into a DataFrame
 df_items = pd.read_csv('data/shared/items_20240708_031709.csv')
@@ -102,11 +104,16 @@ def find_and_remove_similar(df, threshold=0.9):
     # Drop duplicates
     df = df.drop(list(indices_to_drop)).reset_index(drop=True)
 
+    # Function to calculate median of a list
+    def calculate_median(price_list):
+        return np.median(price_list) if price_list else np.nan
+    
+    # Apply the function to the 'All Prices' column and create a new column 'Median Price'
+    df['Median Price'] = df['All Prices'].apply(calculate_median)
+
     return df
     
-    # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('data/output/test.csv', index=False)
-    
-print(sorted_filtered_df_items)
+    # df.loc[df['Description'].str.contains('apivita', case =False)]['Description'].to_csv('data/output/test.csv', index=False)    
 
 if __name__ == '__main__':
 
@@ -114,7 +121,7 @@ if __name__ == '__main__':
         freeze_support()  # Needed for Windows when creating frozen executables
 
     # Find and remove similar entries
-    find_and_remove_similar(sorted_filtered_df_items)
+    sorted_filtered_df_items = find_and_remove_similar(sorted_filtered_df_items)
     # find_and_remove_similar(df_items)
     sorted_filtered_df_items = sorted_filtered_df_items.reset_index(drop=True)
     
@@ -126,6 +133,8 @@ if __name__ == '__main__':
 
 
     # Save DataFrame to CSV
+    # print(sorted_filtered_df_items.columns)
+    # print(sorted_filtered_df_items.iloc[15:26])
     sorted_filtered_df_items.to_csv(filename, index=False)
 
     # print(sorted_filtered_df_items.reset_index(drop=True))

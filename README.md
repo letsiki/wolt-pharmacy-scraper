@@ -1,7 +1,5 @@
 CURRENT TODOS
 
-- toFIX Some lists in the prices column still contain double quotations
-
 OLD TODOS TO REVISIT AT SOME POINT
 
 - create a seperate function to only extract categories without opening them in a new page
