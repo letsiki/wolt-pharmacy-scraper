@@ -1,5 +1,4 @@
 # Basic Imports
-import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -16,7 +15,6 @@ from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 
 class WoltPharmacyExtractor:
-    print(selenium.__version__)
     def __init__(self) -> None:
         """
         Initializes the extractor and creates an instance of the driver
@@ -30,7 +28,7 @@ class WoltPharmacyExtractor:
         if platform.system() == 'Windows':
             self.driver = webdriver.Chrome(ChromeDriverManager().install())
         else:
-            self.driver = webdriver.Firefox(FirefoxService(GeckoDriverManager().install()))
+            self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
 
 
     def quit(self):
@@ -134,7 +132,7 @@ class WoltPharmacyExtractor:
     def _save_items_to_csv(self):
         # Generate a timestamp for the filename
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"date/output/items_{timestamp}.csv"
+        filename = f"data/output/items_{timestamp}.csv"
         
         # Open a new CSV file and write the items with UTF-8 encoding
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
