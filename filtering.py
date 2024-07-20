@@ -24,6 +24,8 @@ algorithm speed
 all other operations on it.
 - Levenshtein contains the LR and is the faster version of the algorithm
 in Python 
+- platform to check the name of the OS, in order to handle 
+multiprocessing support
 
 Inputs:
 - This module requires two csv files. One containg the items and another
@@ -46,6 +48,7 @@ from datetime import datetime
 from multiprocessing import Pool, cpu_count, freeze_support
 import pandas as pd
 from Levenshtein import ratio as levenshtein_ratio
+import platform
 
 # Load the CSV file into a DataFrame
 df_items = pd.read_csv('data/output/items_20240708_031709.csv')
@@ -106,7 +109,10 @@ def find_and_remove_similar(df, threshold=0.9):
 print(sorted_filtered_df_items)
 
 if __name__ == '__main__':
-    freeze_support()  # Needed for Windows when creating frozen executables
+
+    if platform.system() == 'Windows':
+        freeze_support()  # Needed for Windows when creating frozen executables
+
     # Find and remove similar entries
     find_and_remove_similar(sorted_filtered_df_items)
     # find_and_remove_similar(df_items)
