@@ -1,4 +1,5 @@
 # Basic Imports
+import selenium
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -10,9 +11,12 @@ import csv
 from datetime import datetime
 import time
 from collections import Counter
+import platform 
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
 
 class WoltPharmacyExtractor:
-
+    print(selenium.__version__)
     def __init__(self) -> None:
         """
         Initializes the extractor and creates an instance of the driver
@@ -23,7 +27,11 @@ class WoltPharmacyExtractor:
         self.categories: Counter[str] = Counter()
 
     def start(self):
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        if platform.system() == 'Windows':
+            self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        else:
+            self.driver = webdriver.Firefox(FirefoxService(GeckoDriverManager().install()))
+
 
     def quit(self):
         self.driver.quit()
