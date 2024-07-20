@@ -51,8 +51,8 @@ from Levenshtein import ratio as levenshtein_ratio
 import platform
 
 # Load the CSV file into a DataFrame
-df_items = pd.read_csv('data/output/items_20240708_031709.csv')
-df_labels = pd.read_csv('data/output/top_labels_20240708231535.csv')
+df_items = pd.read_csv('data/shared/items_20240708_031709.csv')
+df_labels = pd.read_csv('data/shared/top_labels_20240708231535.csv')
 # print(df_labels)
 # Create a list of labels to check
 labels_to_check = df_labels['Label'].tolist()
