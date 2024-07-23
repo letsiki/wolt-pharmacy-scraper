@@ -7,7 +7,7 @@ from datetime import datetime
 from data.input.excluded_words import EXCLUDED_WORDS
 
 # Load the CSV file into a DataFrame
-df = pd.read_csv('data/output/items_20240708_031709.csv')
+df = pd.read_csv('data/output/items_20240723_025314.csv')
 
 # Initialize a Counter dict
 word_counter = Counter()
