@@ -1,6 +1,12 @@
-CURRENT TODOS
+Project Description
+Scrape Athens Pharmacies Wolt Catalogue, to determine most popular brands and products and their min/max/average prices.
 
-OLD TODOS TO REVISIT AT SOME POINT
+Key Points
+Used Levenshtein ratio in order to group similar description as the Wolt website is not using product ID's
+Enabled Multiprocessing to run the Levenshtein ratio faster.
+
+
+TODO:
 
 - create a seperate function to only extract categories without opening them in a new page
 - Extract Categories to a Dataframe use the algorithm located at Datawars string manipuolation method to find similar
